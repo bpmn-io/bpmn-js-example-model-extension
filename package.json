@@ -1,0 +1,41 @@
+{
+  "name": "custom-meta-model",
+  "version": "0.0.0",
+  "description": "An bpmn-js modeler extended with a custom meta-model",
+  "main": "app/index.js",
+  "scripts": {
+    "all": "grunt",
+    "dev": "grunt auto-build"
+  },
+  "keywords": [
+    "bpmnjs-example"
+  ],
+  "author": {
+    "name": "Nico Rehwaldt",
+    "url": "https://github.com/nikku"
+  },
+  "contributors": [
+    {
+      "name": "bpmn.io contributors",
+      "url": "https://github.com/bpmn-io"
+    }
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
+    "grunt": "^1.0.1",
+    "grunt-browserify": "^5.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-copy": "^1.0.0",
+    "load-grunt-tasks": "^3.5.0",
+    "stringify": "^3.1.0"
+  },
+  "dependencies": {
+    "bpmn-js": "^3.2.2",
+    "diagram-js": "^3.0.0",
+    "jquery": "^3.3.1"
+  }
+}
