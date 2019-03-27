@@ -1,22 +1,41 @@
+<!DOCTYPE html>
 <html>
 <head>
-  <title>custom-meta-model example</title>
+  <title>bpmn-js-example-model-extension</title>
 
-  <link rel="stylesheet" href="css/diagram-js.css" />
-  <style>
-    #canvas {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    }
-  </style>
+  <link rel="stylesheet" href="vendor/bpmn-js/assets/diagram-js.css" />
+  <link rel="stylesheet" href="vendor/bpmn-js/assets/bpmn-font/css/bpmn-embedded.css" />
+  <link rel="stylesheet" href="css/app.css" />
 </head>
 <body>
-  <div id="canvas"></div>
+  <div id="container"></div>
 
-  <button class="export" id="export-to-console">export to console</button>
+  <div id="quality-assurance" class="panel hidden">
+    <form id="form">
+      <p>
+        <b>Suitability Score</b>
+      </p>
+      <br />
+      <input id="suitability-score" type="text" placeholder="100" autocomplete="off">
+      <br />
+      <br />
+      <p id="warning" class="hidden">
+        Suitability Score must be a number
+      </p>
+      <br />
+      <p>
+        <b>Last Checked</b>
+      </p>
+      <br />
+      <p id="last-checked">
+        -
+      </p>
+      <br />
+      <input id="okay" type="submit" value="Okay">
+    </form>
+  </div>
 
-  <script src="index.js"></script>
+  <div id="hint" class="panel">Click <b>right mouse button</b> to edit properties.</div>
+
+  <script src="app.js"></script>
 </html>

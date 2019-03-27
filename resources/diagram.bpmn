@@ -4,7 +4,7 @@
     <bpmn2:task id="Task_1" name="Examine Situation" qa:suitable="0.7">
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
       <bpmn2:extensionElements>
-        <qa:analysisDetails lastChecked="2015-01-20" nextCheck="2015-07-15">
+        <qa:analysisDetails lastChecked="2019-03-27T13:59:37.098Z" nextCheck="2019-03-28T13:59:37.098Z">
           <qa:comment author="Klaus">
             Our operators always have a hard time to figure out, what they need to do here.
           </qa:comment>

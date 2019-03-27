@@ -1,18 +1,19 @@
-# custom-meta-model example
+# bpmn-js Example: Model Extension
 
-This example showcases how to provide a meta model extensions for BPMN 2.0 to [bpmn-js](https://github.com/bpmn-io/bpmn-js).
+An example of creating a model extension for [bpmn-js](https://github.com/bpmn-io/bpmn-js). Model extensions allow you to read, modify and write BPMN 2.0 diagrams that contain extension attributes and elements.
 
-This allows a BPMN viewer / modeler instance to read, create and write domain specific data from and to BPMN 2.0 files.
+:notebook: You can find a more complex example that includes creating a model extension [here](https://github.com/bpmn-io/bpmn-js-example-custom-elements).
+
+:notebook: For more examples of customizing elements head over to our examples [bpmn-js-examples](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements).
 
 
 ## About
 
-This example allows bpmn-js to attach review data in form of `<qa:analysis />` tags to BPMN 2.0 diagrams.
-It captures the suitability of process elements according to current requirements and can be edited through a BPMN 2.0 viewer.
+This example allows you to read, modify and write BPMN 2.0 diagrams that contain `qa:suitable` extension attributes and `qa:analysisDetails` extension elements. You can set the suitability score of each element.
 
-![edit suitability score](https://github.com/bpmn-io/bpmn-js-examples/raw/master/custom-meta-model/resources/screenshot.png)
+![Screenshot](docs/screenshot.png)
 
-An example diagram containing the custom data is shown below.
+Here's an example of a diagram:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -46,17 +47,11 @@ An example diagram containing the custom data is shown below.
 </bpmn2:definitions>
 ```
 
-See [the complete diagram](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-meta-model/resources/sample.bpmn).
+Check out the entire diagram [here](resources/diagram.bpmn).
 
+### Creating a Model Extension
 
-## Usage
-
-This section leads you through the necessary steps to extend bpmn-js with a custom meta-model.
-
-
-### Building a meta-model extension
-
-An extension to BPMN 2.0 must be defined in a JSON file, as shown [here](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-meta-model/resources/qa.json).
+Our extension of BPMN 2.0 will be defined in a JSON file:
 
 ```json
 {
@@ -107,126 +102,111 @@ An extension to BPMN 2.0 must be defined in a JSON file, as shown [here](https:/
 }
 ```
 
+Check out the entire extension [here](resources/qa.json).
+
 A few things are worth noting here:
 
-* You can provide extensions for existing types via the `extends: [ "list", "of", "types" ]` property.
-* Custom types that should plug into BPMN 2.0 `<extensionElements />` feature must be subclass `Element`
+* You can extend existing types using the `"extends"` property.
+* If you want to add extension elements to `bpmn:ExtensionElements` they have to have `"superClass": [ "Element" ]`.
 
-To use the extension in a bpmn-js powered viewer we need to configure it during viewer instantiation.
+For more information about model extensions head over to [moddle](https://github.com/bpmn-io/moddle).
+
+Next, let's add our model extension to bpmn-js.
 
 
-### Configuring bpmn-js
+### Adding the Model Extension to bpmn-js
 
-The extension needs to be passed over to a bpmn-js instance.
+When creating a new instance of bpmn-js we need to add our model extension using the `moddleExtenions` property:
 
 ```javascript
-var qaPackage = require('path/to/qaPackage.json');
+import BpmnModeler from 'bpmn-js/lib/Modeler';
 
-var BpmnJS = require('bpmn-js');
+import qaExtension from '../resources/qaPackage.json';
 
-var viewer = new BpmnJS({
+const bpmnModeler = new BpmnModeler({
   moddleExtensions: {
-    qa: qaPackage
+    qa: qaExtension
   }
 });
 ```
 
-It is passed over to [bpmn-moddle](https://github.com/bpmn-io/bpmn-moddle) for model creation.
+Our model extension will be used by [bpmn-moddle](https://github.com/bpmn-io/bpmn-moddle) which is part of bpmn-js.
 
+### Modifying Extension Attributes and Elements
 
-### Accessing the model data
+bpmn-js can now read, modify and write extension attributes and elements that we defined in our model extension.
 
-The bpmn-viewer is now aware of your meta model extension.
-
-You may search through an elements `<bpmn:extensionElements />` list for it by type and
-extract the required information from it.
+After importing a diagram you could for instance read `qa:AnalysisDetails` extension elements of BPMN 2.0 elements:
 
 ```javascript
-function getExtension(element, type) {
+function getExtensionElement(element, type) {
   if (!element.extensionElements) {
-    return null;
-  }
-
-  return element.extensionElements.filter(function(e) {
-    return e.$instanceOf(type);
-  })[0];
-}
-```
-
-You may now register a click listener that shows the analytical data attached to a bpmn element:
-
-```javascript
-viewer.on('element.click', function(event) {
-  var element = event.element,
-      moddle = viewer.get('moddle'),
-
-      // the underlaying BPMN 2.0 element
-      businessObject = element.businessObject,
-      analysis,
-      score,
-      message;
-
-  analysis = getExtension(businessObject, 'qa:AnalysisDetails');
-  score = businessObject.suitable;
-
-  if (isNaN(score)) {
-    message = 'No suitability score yet, dblclick to assign one';
-  } else {
-    message = 'Diagram element has a suitability score of ' + score;
-  }
-
-  if (analysis) {
-    message += '\n Last analyzed at ' + analysis.lastChecked;
-  }
-
-  window.alert(message);
-});
-```
-
-Alternatively you can also create a new instance of your extension defined data types:
-
-```javascript
-viewer.on('element.click', function(event) {
-
-  ...
-
-  analysis = getExtension(businessObject, 'qa:AnalysisDetails');
-
-  var result = parseFloat(window.prompt('assign a new suitability score to ' + businessObject.id), 10);
-
-  if (isNaN(result)) {
     return;
   }
 
-  businessObject.suitable = result;
+  return element.extensionElements.values.filter((extensionElement) => {
+    return extensionElement.$instanceOf(type);
+  })[0];
+}
 
-  if (!analysis) {
-    analysis = moddle.create('qa:AnalysisDetails');
+const businessObject = getBusinessObject(element);
 
-    if (!businessObject.extensionElements) {
-      businessObject.extensionElements = moddle.create('bpmn:ExtensionElements');
-    }
+const analysisDetails = getExtensionElement(businessObject, 'qa:AnalysisDetails');
+```
 
-    businessObject.extensionElements.get('values').push(analysis);
-  }
+In our example we can set the suitability score of each element:
 
-  analysis.lastChecked = new Date().toString();
+```javascript
+const suitabilityScoreEl = document.getElementById('suitability-score');
+
+const suitabilityScore = Number(suitabilityScoreEl.value);
+
+if (isNaN(suitabilityScore)) {
+  return;
+}
+
+const extensionElements = businessObject.extensionElements || moddle.create('bpmn:ExtensionElements');
+
+let analysisDetails = getExtensionElement(businessObject, 'qa:AnalysisDetails');
+
+if (!analysisDetails) {
+  analysisDetails = moddle.create('qa:AnalysisDetails');
+
+  extensionElements.get('values').push(analysisDetails);
+}
+
+analysisDetails.lastChecked = new Date().toISOString();
+
+const modeling = bpmnModeler.get('modeling');
+
+modeling.updateProperties(element, {
+  extensionElements,
+  suitable: suitabilityScore
 });
 ```
 
+Check out the entire code [here](app/app.js).
 
-## Build the Example
+## Run the Example
 
-First time setup:
+You need a [NodeJS](http://nodejs.org) development stack with [npm](https://npmjs.org) installed to build the project.
 
-```
+To install all project dependencies execute
+
+```sh
 npm install
 ```
 
-Building the application into the `dist` directory:
+To start the example execute
 
+```sh
+npm start
 ```
-grunt
+
+To build the example into the `public` folder execute
+
+```sh
+npm run all
 ```
 
 
