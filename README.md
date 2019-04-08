@@ -1,10 +1,9 @@
+> This example is part of our [:notebook: custom elements guide](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements). Checkout the final result [here](https://github.com/bpmn-io/bpmn-js-example-custom-elements).
+
+
 # bpmn-js Example: Model Extension
 
 An example of creating a model extension for [bpmn-js](https://github.com/bpmn-io/bpmn-js). Model extensions allow you to read, modify and write BPMN 2.0 diagrams that contain extension attributes and elements.
-
-:notebook: You can find a more complex example that includes creating a model extension [here](https://github.com/bpmn-io/bpmn-js-example-custom-elements).
-
-:notebook: For more examples of customizing elements head over to our examples [bpmn-js-examples](https://github.com/bpmn-io/bpmn-js-examples/tree/master/custom-elements).
 
 
 ## About
