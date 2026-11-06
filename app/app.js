@@ -3,7 +3,7 @@ import { getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
 
 import diagramXML from '../resources/diagram.bpmn';
 
-import qaExtension from '../resources/qa';
+import qaExtension from '../resources/qa.json';
 
 const HIGH_PRIORITY = 1500;
 
@@ -69,16 +69,16 @@ bpmnModeler.importXML(diagramXML, (err) => {
     qualityAssuranceEl.classList.remove('hidden');
 
     ({ element } = event);
-  
+
     // ignore root element
     if (!element.parent) {
       return;
     }
 
     businessObject = getBusinessObject(element);
-  
+
     let { suitable } = businessObject;
-    
+
     suitabilityScoreEl.value = suitable ? suitable : '';
 
     suitabilityScoreEl.focus();
